@@ -24,6 +24,10 @@ int main()
     int n, i;
     scanf("%d", &n);
     input(parking, n);
+    printf("\n");
+    // for(i=0; i<n; i++){
+    //     printf("%d %d %c %d\n", parking[i].CarNum, parking[i].PhoneNum, parking[i].Product, parking[i].time);
+    // }
     for(i=0; i<n; i++){
         compute(&parking[i]);
     }
@@ -39,8 +43,8 @@ void input(info *p, int N){
         scanf("%d %d", &ptr->CarNum, &ptr->PhoneNum);
         getchar();
         scanf("%c", &ptr->Product);
-        getchar();
         if(ptr->Product == 'S'){
+            getchar();
             scanf("%c", &ptr-> Subscribe);
             scanf("%d", &ptr->Subscribe_day);
         }
@@ -65,25 +69,25 @@ void compute(info *p){
 }
 void display(info *p, int N){
     info *ptr;
-    double totalCharge = 0;
+    double totalCharge;
     double ChargeD = 0;
     double ChargeS = 0;
 
 
     for(ptr=p; ptr<p+N; ptr++){
         printf("%d %d %c %.0lf\n", ptr->CarNum, ptr->PhoneNum, ptr->Product, ptr->charge);
-        totalCharge += ptr->charge;
         if(ptr->Product == 'D') ChargeD += ptr->charge;
         else ChargeS += ptr->charge;
     }
+    totalCharge = ChargeD + ChargeS;
     printf("%.lf %.lf %.lf\n", ChargeD, ChargeS, totalCharge);
 }
 void parking_info_sort(info *p, int N){
-    info *ptr, tmp;
+    info *ptr, tmp, *check;
     int i;
     for(i=0; i<N-1; i++){
         for(ptr=p; ptr<p+N-1; ptr++){
-            if((ptr+1)->Product == 'D'){
+            if(ptr->Product > (ptr+1)->Product){
                 tmp = *ptr;
                 *ptr = *(ptr+1);
                 *(ptr+1) = tmp;
@@ -97,15 +101,20 @@ void parking_info_sort(info *p, int N){
             tmp = *ptr;
             *ptr = *(ptr+1);
             *(ptr+1) = tmp;
+            ptr = p;
+            continue;
         }
         ptr++;
     }
+    check = ptr;
     //S 정렬
     while(ptr != p+N-1){
         if(ptr->CarNum > (ptr+1)->CarNum){
             tmp = *ptr;
             *ptr = *(ptr+1);
             *(ptr+1) = tmp;
+            ptr = check;
+            continue;
         }
         ptr++;
     }
